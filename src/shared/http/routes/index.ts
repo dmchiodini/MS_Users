@@ -1,9 +1,10 @@
+import { AppError } from "@shared/errors/AppError";
 import { Request, Response, Router } from "express";
 
 const routes = Router();
 
 routes.get("/", (request: Request, response: Response) => {
-  return response.json({ message: "Olá Diego" });
+  throw new AppError("Deu ruim", 400);
 });
 
 export { routes };
