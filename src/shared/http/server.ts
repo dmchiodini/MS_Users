@@ -1,4 +1,5 @@
-import express from "express";
+import "dotenv/config";
+import express, { Request, Response } from "express";
 import "express-async-errors";
 import cors from "cors";
 
@@ -7,10 +8,10 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get("/", (request, response) => {
+app.get("/", (request: Request, response: Response) => {
   return response.json({ message: "Olá Diego" });
 });
 
-app.listen(5000, () => {
-  console.log("Server started on port 5000");
+app.listen(process.env.PORT, () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
