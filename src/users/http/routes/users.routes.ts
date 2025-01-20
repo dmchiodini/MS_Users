@@ -1,20 +1,17 @@
 import { User } from "@users/entities/User";
 import { UserRepository } from "@users/repository/UserRepository";
+import { createUserController } from "@users/useCases/createUser";
+import { getUsersController } from "@users/useCases/getUsers";
 import { Router } from "express";
-import { v4 as uuidv4 } from "uuid";
 
 const usersRouter = Router();
-const userRepository = new UserRepository();
 
 usersRouter.post("/", (request, response) => {
-  const { name, email, password } = request.body;
-  const user = userRepository.createUser({
-    name,
-    email,
-    password,
-  });
+  return createUserController.handle(request, response);
+});
 
-  return response.status(201).json(user);
+usersRouter.get("/", (request, response) => {
+  return getUsersController.handle(request, response);
 });
 
 export { usersRouter };

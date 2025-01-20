@@ -8,9 +8,17 @@ type UserCreateDTO = {
 
 export class UserRepository {
   private users: User[];
+  private static INSTANCE: UserRepository;
 
-  constructor() {
+  private constructor() {
     this.users = [];
+  }
+
+  public static getInstance(): UserRepository {
+    if (!UserRepository.INSTANCE) {
+      UserRepository.INSTANCE = new UserRepository();
+    }
+    return UserRepository.INSTANCE;
   }
 
   createUser({ name, email, password }: UserCreateDTO) {
@@ -25,6 +33,20 @@ export class UserRepository {
 
     this.users.push(user);
 
+    return user;
+  }
+
+  async getUsers(): Promise<User[]> {
+    return this.users;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const user = this.users.find((u) => u.email === email);
+    return user;
+  }
+
+  async getUserById(id: string): Promise<User | undefined> {
+    const user = this.users.find((u) => u.id === id);
     return user;
   }
 }
