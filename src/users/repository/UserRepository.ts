@@ -1,52 +1,61 @@
 import { User } from "@users/entities/User";
+import { dataSource } from "@shared/typeorm";
+import { Repository } from "typeorm";
+import {
+  CreateUserDTO,
+  IUserRepository,
+  PaginateParams,
+  UserPaginateProps,
+} from "./IUserRepository";
 
-type UserCreateDTO = {
-  name: string;
-  email: string;
-  password: string;
-};
+export class UserRepository implements IUserRepository {
+  private repository: Repository<User>;
 
-export class UserRepository {
-  private users: User[];
-  private static INSTANCE: UserRepository;
-
-  private constructor() {
-    this.users = [];
+  constructor() {
+    this.repository = dataSource.getRepository(User);
   }
 
-  public static getInstance(): UserRepository {
-    if (!UserRepository.INSTANCE) {
-      UserRepository.INSTANCE = new UserRepository();
-    }
-    return UserRepository.INSTANCE;
+  async createUser({ name, email, password }: CreateUserDTO): Promise<User> {
+    const user = this.repository.create({ name, email, password });
+    return this.repository.save(user);
   }
 
-  createUser({ name, email, password }: UserCreateDTO) {
-    const user = new User();
-
-    Object.assign(user, {
-      name,
-      email,
-      password,
-      created_at: new Date(),
-    });
-
-    this.users.push(user);
-
-    return user;
+  async updateUser(user: User): Promise<User> {
+    return this.repository.save(user);
   }
 
-  async getUsers(): Promise<User[]> {
-    return this.users;
+  async getUsers({
+    page,
+    skip,
+    take,
+  }: PaginateParams): Promise<UserPaginateProps> {
+    const [users, count] = await this.repository
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
+
+    const result = {
+      per_page: take,
+      total: count,
+      current_page: page,
+      data: users,
+    };
+
+    return result;
   }
 
-  async getUserByEmail(email: string): Promise<User | undefined> {
-    const user = this.users.find((u) => u.email === email);
-    return user;
+  async getUserByEmail(email: string): Promise<User | null> {
+    return this.repository.findOneBy({ email });
   }
 
-  async getUserById(id: string): Promise<User | undefined> {
-    const user = this.users.find((u) => u.id === id);
+  async getUserById(id: string): Promise<User | null> {
+    return this.repository.findOneBy({ id });
+  }
+
+  async deleteUser(id: string): Promise<User> {
+    const user = await this.getUserById(id);
+    await this.repository.delete({ id });
     return user;
   }
 }
