@@ -5,10 +5,10 @@ import { instanceToInstance } from "class-transformer";
 
 export class CreateUserController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const createRoleUseCase = container.resolve(CreateUserUseCase);
+    const createUserUseCase = container.resolve(CreateUserUseCase);
 
     const { name, email, password } = request.body;
-    const user = await createRoleUseCase.execute({
+    const user = await createUserUseCase.execute({
       name,
       email,
       password,

@@ -6,6 +6,7 @@ import { GetUsersController } from "@users/useCases/getUsers/GetUsersController"
 import { UpdateUserController } from "@users/useCases/updateUser/UpdateUserController";
 import { DeleteUsersController } from "@users/useCases/deleteUser/DeleteUserController";
 import { GetUserByIdController } from "@users/useCases/getUserById/GetUserByIdController";
+import { CreateSessionController } from "@users/createSession/CreateSessionController";
 
 const usersRouter = Router();
 const createUserController = container.resolve(CreateUserController);
@@ -13,6 +14,7 @@ const getUsersController = container.resolve(GetUsersController);
 const getUserByIdController = container.resolve(GetUserByIdController);
 const updateUserController = container.resolve(UpdateUserController);
 const deleteUsersController = container.resolve(DeleteUsersController);
+const createSessionController = container.resolve(CreateSessionController);
 
 usersRouter.post(
   "/",
@@ -77,6 +79,19 @@ usersRouter.delete(
   }),
   (request, response) => {
     return deleteUsersController.handle(request, response);
+  }
+);
+
+usersRouter.post(
+  "/session",
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    }),
+  }),
+  (request, response) => {
+    return createSessionController.handle(request, response);
   }
 );
 

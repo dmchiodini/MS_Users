@@ -1,3 +1,4 @@
+import { CreateSessionController } from "@users/createSession/CreateSessionController";
 import { IUserRepository } from "@users/repository/IUserRepository";
 import { UserRepository } from "@users/repository/UserRepository";
 import { CreateUserController } from "@users/useCases/createUser/CreateUserController";
@@ -13,3 +14,4 @@ container.registerSingleton("DeleteUsersController", DeleteUsersController);
 container.registerSingleton("GetUserByIdController", GetUserByIdController);
 container.registerSingleton("GetUsersController", GetUsersController);
 container.registerSingleton("UpdateUserController", UpdateUserController);
+container.registerSingleton("CreateSessionController", CreateSessionController);
