@@ -21,6 +21,10 @@ export class CreateUserTable1737398906043 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: "password",
+            type: "string",
+          },
+          {
             name: "created_at",
             type: "timestamp",
             default: "CURRENT_TIMESTAMP",
