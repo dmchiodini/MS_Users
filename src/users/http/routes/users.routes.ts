@@ -7,6 +7,7 @@ import { UpdateUserController } from "@users/useCases/updateUser/UpdateUserContr
 import { DeleteUsersController } from "@users/useCases/deleteUser/DeleteUserController";
 import { GetUserByIdController } from "@users/useCases/getUserById/GetUserByIdController";
 import { CreateSessionController } from "@users/createSession/CreateSessionController";
+import { isAuthenticated } from "@shared/http/middleware/isAuthenticated";
 
 const usersRouter = Router();
 const createUserController = container.resolve(CreateUserController);
@@ -18,6 +19,7 @@ const createSessionController = container.resolve(CreateSessionController);
 
 usersRouter.post(
   "/",
+  isAuthenticated,
   celebrate({
     [Segments.BODY]: Joi.object().keys({
       name: Joi.string().required(),
@@ -32,6 +34,7 @@ usersRouter.post(
 
 usersRouter.get(
   "/",
+  isAuthenticated,
   celebrate({
     [Segments.QUERY]: Joi.object().keys({
       page: Joi.number(),
@@ -45,6 +48,7 @@ usersRouter.get(
 
 usersRouter.get(
   "/:id",
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: Joi.object().keys({
       id: Joi.string().uuid().required(),
@@ -57,6 +61,7 @@ usersRouter.get(
 
 usersRouter.patch(
   "/:id",
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: Joi.object().keys({
       id: Joi.string().uuid().required(),
@@ -72,6 +77,7 @@ usersRouter.patch(
 
 usersRouter.delete(
   "/:id",
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: Joi.object().keys({
       id: Joi.string().uuid().required(),
