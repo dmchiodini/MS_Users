@@ -1,10 +1,29 @@
 import { User } from "@users/entities/User";
-import { UserRepository } from "@users/repository/UserRepository";
+import {
+  IUserRepository,
+  UserPaginateProps,
+} from "@users/repository/IUserRepository";
+import { inject, injectable } from "tsyringe";
 
-export class GetUserUseCase {
-  constructor(private userRepository: UserRepository) {}
+type getUsersUseCaseParams = {
+  page: number;
+  limit: number;
+};
 
-  async execute(): Promise<User[]> {
-    return this.userRepository.getUsers();
+@injectable()
+export class GetUsersUseCase {
+  constructor(
+    @inject("UserRepository")
+    private userRepository: IUserRepository
+  ) {}
+
+  async execute({
+    page,
+    limit,
+  }: getUsersUseCaseParams): Promise<UserPaginateProps> {
+    const take = limit;
+    const skip = (Number(page) - 1) * take;
+
+    return this.userRepository.getUsers({ page, skip, take });
   }
 }

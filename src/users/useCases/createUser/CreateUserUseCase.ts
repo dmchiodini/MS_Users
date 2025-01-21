@@ -1,6 +1,8 @@
 import { AppError } from "@shared/errors/AppError";
 import { User } from "@users/entities/User";
-import { UserRepository } from "@users/repository/UserRepository";
+import { IUserRepository } from "@users/repository/IUserRepository";
+import { inject, injectable } from "tsyringe";
+import { hash } from "bcryptjs";
 
 type CreateUserDTO = {
   name: string;
@@ -8,8 +10,12 @@ type CreateUserDTO = {
   password: string;
 };
 
+@injectable()
 export class CreateUserUseCase {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    @inject("UserRepository")
+    private userRepository: IUserRepository
+  ) {}
 
   async execute({ name, email, password }: CreateUserDTO): Promise<User> {
     const emailExists = await this.userRepository.getUserByEmail(email);
@@ -18,10 +24,12 @@ export class CreateUserUseCase {
       throw new AppError("The email is already being used", 400);
     }
 
+    const passwordHashed = await hash(password, 10);
+
     return this.userRepository.createUser({
       name,
       email,
-      password,
+      password: passwordHashed,
     });
   }
 }
