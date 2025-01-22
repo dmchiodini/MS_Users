@@ -1,0 +1,423 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "MS_User Documentation",
+    "description": "MS_User Documentation with all specifications",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Diego Chiodini",
+      "email": "diego.chiodini89@gmail.com"
+    }
+  },
+  "swaggerOptions": {
+    "docExpansions": "none",
+    "persistAuthorization": true
+  },
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "scheme": "bearer",
+      "in": "header"
+    }
+  },
+  "paths": {
+    "/users": {
+      "post":{
+        "tags":["Users"],
+        "summary":"Create a user",
+        "description":"Create a new user",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "type":"object",
+                "properties":{
+                  "name":{
+                    "type":"string"
+                  },
+                  "email":{
+                    "type":"string"
+                  },
+                  "password":{
+                    "type":"string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "201":{
+            "description":"User created.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type":"object",
+                  "properties":{
+                    "user" : {
+                      "type":"object",
+                      "properties":{
+                        "id":{
+                          "type":"string"
+                        },
+                        "name":{
+                          "type":"string"
+                        },
+                        "email":{
+                          "type":"string"
+                        },
+                        "created_at":{
+                          "type":"string"
+                        }
+                      }
+                    },
+                    "Token": {
+                      "type": "string"
+                    }
+                  },
+                  "example":{
+                    "user": {
+                      "id": "9c9bc8d6-d6b9-409e-a3f1-a6ec7b608530",
+                      "name": "John Doe",
+                      "email": "john@mail.com",
+                      "created_at": "2025-01-21T18:27:34.000Z"
+                  },
+                  "token": "eyJhbGciOiJIUzI1NiIspXVCJ9.eyJpYXQiOjE3Mzc1NzI2NDgsIm0MDllLWEzZjEtYTZlYzdiNjA4NTMwIn0.CbdB7yYyd9O1Iu8aLSpUUKptJg"
+                  }
+                }
+              }
+            }
+          },
+          "400":{
+            "description": "Email address already used."
+          },
+          "401":{
+            "description": "Invalid authentication token."
+          }
+        }
+      },
+      "get":{
+        "tags":["Users"],
+        "summary": "List all users",
+        "description":"Returns all users paginated.",
+        "parameters":[
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Number of the page",
+            "required": false,
+            "schema":{
+              "type":"number",
+              "example": "1"
+            },
+            "style": "label"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of registers per page",
+            "required": false,
+            "schema":{
+              "type":"number",
+              "example": "15"
+            },
+            "style": "label"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description": "Success.",
+            "content":{
+              "application/json":{
+                "example":{
+                  "per_page": 15,
+                  "total": 2,
+                  "current_page": 1,
+                  "data": [
+                    {
+                      "id": "9c9bc8d6-d6b9-409e-a3f1-a6ec7b608530",
+                      "name": "John Doe",
+                      "email": "john@mail.com",
+                      "created_at": "2025-01-21T18:27:34.000Z"
+                    },
+                    {
+                      "id": "9c9bc8d6-d6b9-409e-a3f1-a6ec7b608530",
+                      "name": "User",
+                      "email": "user@email.com",
+                      "created_at": "2025-01-21T18:27:34.000Z"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400":{
+            "description": "Bad request."
+          },
+          "401":{
+            "description": "Invalid authentication token.",
+            "components": {
+              "responses": {
+                "UnauthorizedError": {
+                  "description": "Access token is missing or invali"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete user by Id",
+        "description": "Delete user based on Id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identify of a user",
+            "required": true,
+            "schema":{
+              "type":"string"
+            },
+            "style": "label"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success."
+          },
+          "400":{
+            "description": "Bad request."
+          },
+          "401":{
+            "description": "Invalid authentication token."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      }
+    },
+    "/users/session": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User authenticate",
+        "description": "User authentication in the application",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "email": "admin@admin.com",
+                  "password": "admin"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "datetime"
+                        }
+                      }
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "user": {
+                    "id": "3f33cb96-28ef-45f5-b6f4-dcadf80c72d0",
+                    "name": "User",
+                    "email": "user@email.com",
+                    "created_at": "2010-06-18T19:17:09.000Z"
+                  },
+                  "token": "eyJhbGciOiJIUzI1NiICI6IkpXVCJ9.eyJpYXQiOjE3Mzc1NzA2NDMsIm3MDY1Mywic3ViIjoiZmJlMDJhODItMDM2ZC00MWIxLTk1YWEtNmI2ZjZiYTM3NDg5In0.Zlo0dmAucP5iugXFFX_5zIAHcdCGaNWOxfcEsTUHmt4"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "Incorrect email/password combination."
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update user",
+        "description": "Update user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identify of a user",
+            "required": true,
+            "schema":{
+              "type":"string"
+            },
+            "style": "label"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "User name"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "datetime"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "9c9bc8d6-d6b9-409e-a3f1-a6ec7b608530",
+                  "name": "user name",
+                  "email": "user@email.com",
+                  "created_at": "2025-01-21T18:27:34.000Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid authentication token."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "Find user by id",
+        "description": "Returns a user based id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identify of a user",
+            "required": true,
+            "schema":{
+              "type":"string"
+            },
+            "style": "label"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "created_at": {
+                      "type": "datetime"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "9c9bc8d6-d6b9-409e-a3f1-a6ec7b608530",
+                  "name": "John Doe",
+                  "email": "john@mail.com",
+                  "created_at": "2025-01-21T18:27:34.000Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request."
+          },
+          "401": {
+            "description": "Invalid authentication token."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "scheme": "bearer",
+        "in": "header"
+      }
+    }
+  },
+  "security": [{ "JWT": [] }]
+}

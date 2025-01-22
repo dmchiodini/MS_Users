@@ -6,7 +6,7 @@ import { GetUsersController } from "@users/useCases/getUsers/GetUsersController"
 import { UpdateUserController } from "@users/useCases/updateUser/UpdateUserController";
 import { DeleteUsersController } from "@users/useCases/deleteUser/DeleteUserController";
 import { GetUserByIdController } from "@users/useCases/getUserById/GetUserByIdController";
-import { CreateSessionController } from "@users/createSession/CreateSessionController";
+import { CreateSessionController } from "@users/useCases/createSession/CreateSessionController";
 import { isAuthenticated } from "@shared/http/middleware/isAuthenticated";
 
 const usersRouter = Router();
@@ -59,7 +59,7 @@ usersRouter.get(
   }
 );
 
-usersRouter.patch(
+usersRouter.put(
   "/:id",
   isAuthenticated,
   celebrate({

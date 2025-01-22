@@ -1,4 +1,4 @@
-import { CreateSessionController } from "@users/createSession/CreateSessionController";
+import { CreateSessionController } from "@users/useCases/createSession/CreateSessionController";
 import { IUserRepository } from "@users/repository/IUserRepository";
 import { UserRepository } from "@users/repository/UserRepository";
 import { CreateUserController } from "@users/useCases/createUser/CreateUserController";
