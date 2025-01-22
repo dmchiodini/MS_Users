@@ -3,11 +3,7 @@
   "info": {
     "title": "MS_User Documentation",
     "description": "MS_User Documentation with all specifications",
-    "version": "1.0.0",
-    "contact": {
-      "name": "Diego Chiodini",
-      "email": "diego.chiodini89@gmail.com"
-    }
+    "version": "1.0.0"
   },
   "swaggerOptions": {
     "docExpansions": "none",
