@@ -1,11 +1,14 @@
 {
   "openapi": "3.0.3",
-  "info": {
-    "title": "MS_User Documentation",
-    "description": "MS_User Documentation with all specifications",
-    "version": "1.0.0"
-  },
-  "swaggerOptions": {
+    "info": {
+      "title": "MS_User Documentation",
+      "description": "MS_User Documentation with all specifications",
+      "version": "1.0.0"
+    },
+    "schemes": ["http"],
+    "produces": ["application/json"],
+    "consumes":["application/json"],
+   "swaggerOptions": {
     "docExpansions": "none",
     "persistAuthorization": true
   },
@@ -196,6 +199,7 @@
       }
     },
     "/users/session": {
+      "security": [],
       "post": {
         "tags": ["Users"],
         "summary": "User authenticate",
